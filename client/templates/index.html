@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixelVault</title>
+
+    <link rel="stylesheet" href="/styles/index.css" />
+  </head>
+  <body>
+    <div
+      style="
+        margin: 0px 20px 20px 20px;
+        border-bottom: 1px solid black;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      "
+    >
+      <h1>PixelVault</h1>
+      <form
+        action="{{ url_for('logout') }}"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <button>Logout</button>
+      </form>
+    </div>
+
+    <div></div>
+
+    <div class="main-wrapper">
+      <div class="upload-form">
+        <h2>Upload Image</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+          <input type="file" name="images" multiple />
+          <input type="submit" value="Upload" />
+        </form>
+      </div>
+
+      <div>
+        <h2>Images</h2>
+        <div class="image-wrapper">
+          {% if images %}
+          <ul>
+            {% for image in images %}
+            <li class="image-list-item">
+              <div>
+                <a href="{{ image.url }}"
+                  ><image class="thumbnail" src="{{ image.url }}"
+                /></a>
+              </div>
+              <div class="image-data">
+                <div>{{image.name}}</div>
+                <a href="{{ image.url }}" download>Download</a>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <div class="No Images!">No images.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

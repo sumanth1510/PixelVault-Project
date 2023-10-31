@@ -1,0 +1,17 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Calibri, "Trebuchet MS", sans-serif;
+  min-height: 90vh;
+  background-color: lightgreen;
+}
+
+a {
+  text-decoration: none;
+  background-color: rgb(27, 152, 8);
+  color: white;
+  padding: 8px 10px;
+  border-radius: 10px;
+}

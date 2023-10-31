@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+
+    <link rel="stylesheet" href="/styles/login.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <h2>LOGIN</h2>
+      {% if message %}
+      <p class="error-msg">{{ message }}</p>
+      {% endif %}
+      <form action="/login" method="post">
+        <label for="email">Email:</label><br />
+        <input type="email" id="email" name="email" required /><br />
+        <label for="password">Password:</label><br />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+        /><br /><br />
+        <div style="text-align: center">
+          <input type="submit" value="Submit" />
+        </div>
+      </form>
+
+      <p>New here? <a href="/signup">Signup</a></p>
+    </div>
+  </body>
+</html>

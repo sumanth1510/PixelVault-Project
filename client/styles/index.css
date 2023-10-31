@@ -1,0 +1,81 @@
+* {
+  font-family: Calibri, "Trebuchet MS", sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: lightgreen;
+}
+
+.main-wrapper {
+  display: flex;
+  width: 100vw;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: min(400px, 100vh);
+}
+
+.main-wrapper > div {
+  margin: 20px;
+  width: 50%;
+}
+
+.upload-form {
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding: 10px 20px 40px 20px;
+  height: 200px;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background-color: rgb(240, 240, 240);
+  border-radius: 10px;
+}
+
+.image-list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 30px;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.image-list-item:hover {
+  background-color: rgb(123, 170, 236, 0.4);
+}
+
+.image-data {
+  margin-left: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.image-wrapper {
+  width: fit-content;
+  height: 300px;
+  min-width: 80%;
+  overflow: auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .main-wrapper {
+    flex-direction: column;
+    padding: 0px 20px;
+    box-sizing: border-box;
+  }
+
+  .main-wrapper > div {
+    width: 100%;
+  }
+
+  .image-wrapper {
+    width: fit-content;
+    min-height: 100px;
+  }
+}

@@ -1,0 +1,4 @@
+.vscode
+database
+service-account-key.json
+.env

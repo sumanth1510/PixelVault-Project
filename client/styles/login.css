@@ -1,0 +1,30 @@
+* {
+  font-family: Calibri, "Trebuchet MS", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightgreen;
+}
+
+.error-msg {
+  color: red;
+  font-size: 1rem;
+}
+
+#email,
+#password {
+  width: 200px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+}
