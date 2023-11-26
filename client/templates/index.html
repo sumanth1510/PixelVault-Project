@@ -94,8 +94,9 @@
         modal.style.display = "block";
         modalImg.src = src;
         captionText.innerHTML =
-          alt.length > 15 ? alt.substring(0, 15) + "..." : alt;
+          alt.length > 30 ? alt.substring(0, 30) + "..." : alt;
         downloadLink.href = src;
+        downloadLink.download = alt;
 
         span.onclick = function () {
           modal.style.display = "none";
