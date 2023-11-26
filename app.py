@@ -188,12 +188,8 @@ def get_image(filename):
 @app.route('/download/<filename>')
 def download_image(filename):
     blob = bucket.blob(filename)
-    signed_url = blob.generate_signed_url(
-        version='v4',
-        expiration=timedelta(minutes=30),
-        method='GET'
-    )
-    return redirect(signed_url)
+    image_data = blob.download_as_bytes()
+    return make_response(image_data)
 
 
 @app.route('/delete/<filename>')
