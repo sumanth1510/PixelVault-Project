@@ -2,3 +2,4 @@ Flask
 google-cloud-datastore
 google-cloud-storage
 PyJWT
+python-dotenv

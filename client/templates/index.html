@@ -46,13 +46,24 @@
             {% for image in images %}
             <li class="image-list-item">
               <div>
-                <a href="{{ image.url }}"
-                  ><image class="thumbnail" src="{{ image.url }}"
+                <a href="#"
+                  ><image
+                    class="thumbnail"
+                    src="{{ url_for('get_image',filename=image.id) }}"
                 /></a>
               </div>
               <div class="image-data">
                 <div>{{image.name}}</div>
-                <a href="{{ image.url }}" download>Download</a>
+                <p>Size: {{image.size}}</p>
+                <div
+                  class="listen-view"
+                  onclick="openModal('{{ url_for('get_image', filename=image.id) }}', '{{ image.name }}')"
+                >
+                  <h2>View</h2>
+                </div>
+                <a href="{{ url_for('delete_image',filename=image.id) }}"
+                  >Delete</a
+                >
               </div>
             </li>
             {% endfor %}
@@ -63,5 +74,52 @@
         </div>
       </div>
     </div>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="img01" style="width: 100%" />
+        <div class="modal-footer">
+          <a id="downloadLink" href="#" download>Download</a>
+          <button onclick="closeModal()">Close</button>
+        </div>
+        <div id="caption" class="modal-caption"></div>
+      </div>
+    </div>
+
+    <script>
+      function openModal(src, alt) {
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        var downloadLink = document.getElementById("downloadLink");
+        var span = document.getElementsByClassName("close")[0];
+
+        modal.style.display = "block";
+        modalImg.src = src;
+        captionText.innerHTML =
+          alt.length > 15 ? alt.substring(0, 15) + "..." : alt;
+        downloadLink.href = src;
+        downloadLink.download = alt;
+
+        span.onclick = function () {
+          modal.style.display = "none";
+        };
+      }
+      function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+      }
+
+      window.onclick = function (event) {
+        var modal = document.getElementById("myModal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault()
+      );
+    </script>
   </body>
 </html>

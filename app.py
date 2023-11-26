@@ -2,14 +2,23 @@ from google.cloud import datastore, storage
 from flask import Flask, render_template, request, send_from_directory, send_file, redirect, url_for, g, make_response
 import jwt
 import os
+from datetime import timedelta
+import io
 
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
 app = Flask(__name__, template_folder="client/templates")
 
-client = datastore.Client()
-bucket = storage.Client().bucket(BUCKET_NAME)
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION')
+with open('google-credentials.json', 'w') as outfile:
+    outfile.write(GOOGLE_APPLICATION_CREDENTIALS)
+
+
+bucket = storage.Client.from_service_account_json(
+    'google-credentials.json')
+client = datastore.Client.from_service_account_json(
+    'google-credentials.json')
 
 
 def check_jwt():
@@ -105,6 +114,17 @@ def logout():
     return response
 
 
+def sizeOfImage(image):
+    image_size_kb = image['image_size'] / 1024
+    image_size_mb = image_size_kb / 1024
+    print(image)
+    if image_size_mb > 1:
+        image['image_size'] = f"{round(image_size_mb, 2)} mb"
+    else:
+        image['image_size'] = f"{round(image_size_kb, 2)} kb"
+    return image['image_size']
+
+
 @app.route('/')
 def index():
     email = g.get("email")
@@ -113,9 +133,9 @@ def index():
     query.add_filter('user', '=', email)
     images = list(query.fetch())
 
-    print(images)
+    # print(images)
 
-    image_urls = [{"url": image['url'], "name": image["filename"]}
+    image_urls = [{"id": image['id'], "name": image["filename"], 'size': sizeOfImage(image)}
                   for image in images]
 
     return render_template('index.html', images=image_urls)
@@ -130,11 +150,13 @@ def upload_files():
 
     if not files or all([f.filename == '' for f in files]):
         return redirect(url_for('index'))
-
+    username = g.get("email")
     for file in files:
         if file:
             filename = file.filename
-            blob = bucket.blob(filename)
+            sec_name = username + \
+                filename.replace(' ', '_').replace('/', '_').lower()
+            blob = bucket.blob(sec_name)
             blob.upload_from_string(
                 file.read(),
                 content_type=file.content_type
@@ -144,7 +166,8 @@ def upload_files():
             image_entity.update({
                 'user': g.get("email"),
                 'filename': filename,
-                'url': blob.public_url,
+                'image_size': blob.size,
+                'id': sec_name,
             })
             client.put(image_entity)
 
@@ -153,26 +176,39 @@ def upload_files():
 
 @app.route('/image/<filename>')
 def get_image(filename):
-    blob = storage.Blob(filename, bucket)
-    image_data = blob.download_as_bytes()
-    return send_file(
-        io.BytesIO(image_data),
-        mimetype='image/jpeg',
-        as_attachment=True,
-        attachment_filename=filename
+    blob = bucket.blob(filename)
+    signed_url = blob.generate_signed_url(
+        version='v4',
+        expiration=timedelta(minutes=30),
+        method='GET'
     )
+    return redirect(signed_url)
 
 
 @app.route('/download/<filename>')
 def download_image(filename):
-    blob = storage.Blob(filename, bucket)
-    image_data = blob.download_as_bytes()
-    return send_file(
-        io.BytesIO(image_data),
-        mimetype='image/jpeg',
-        as_attachment=True,
-        attachment_filename=filename
+    blob = bucket.blob(filename)
+    signed_url = blob.generate_signed_url(
+        version='v4',
+        expiration=timedelta(minutes=30),
+        method='GET'
     )
+    return redirect(signed_url)
+
+
+@app.route('/delete/<filename>')
+def delete_image(filename):
+    if not g.get("email"):
+        return redirect(url_for('login'))
+    blob = bucket.Blob(filename, bucket)
+    blob.delete()
+    query = client.query(kind='Image')
+    query.add_filter('id', '=', filename)
+    images = list(query.fetch())
+    for image in images:
+        client.delete(image.key)
+
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
