@@ -44,23 +44,19 @@
           {% if images %}
           <ul>
             {% for image in images %}
-            <li class="image-list-item">
+            <li
+              class="image-list-item"
+              onclick="openModal('{{ url_for('get_image', filename=image.id) }}', '{{ image.name }}')"
+            >
               <div>
-                <a href="#"
-                  ><image
-                    class="thumbnail"
-                    src="{{ url_for('get_image',filename=image.id) }}"
-                /></a>
+                <image
+                  class="thumbnail"
+                  src="{{ url_for('get_image',filename=image.id) }}"
+                />
               </div>
               <div class="image-data">
                 <div>{{image.name}}</div>
                 <p>Size: {{image.size}}</p>
-                <div
-                  class="listen-view"
-                  onclick="openModal('{{ url_for('get_image', filename=image.id) }}', '{{ image.name }}')"
-                >
-                  <h2>View</h2>
-                </div>
                 <a href="{{ url_for('delete_image',filename=image.id) }}"
                   >Delete</a
                 >
