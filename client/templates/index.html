@@ -44,11 +44,11 @@
           {% if images %}
           <ul>
             {% for image in images %}
-            <li
-              class="image-list-item"
-              onclick="openModal('{{ url_for('get_image', filename=image.id) }}', '{{ image.name }}')"
-            >
-              <div>
+            <li class="image-list-item">
+              <div
+                style="cursor: pointer"
+                onclick="openModal('{{ url_for('get_image', filename=image.id) }}', '{{ image.name }}')"
+              >
                 <image
                   class="thumbnail"
                   src="{{ url_for('get_image',filename=image.id) }}"

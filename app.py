@@ -16,7 +16,7 @@ with open('google-credentials.json', 'w') as outfile:
 
 
 bucket = storage.Client.from_service_account_json(
-    'google-credentials.json').get_bucket(BUCKET_NAME)
+    'google-credentials.json')
 client = datastore.Client.from_service_account_json(
     'google-credentials.json')
 
@@ -200,7 +200,7 @@ def download_image(filename):
 def delete_image(filename):
     if not g.get("email"):
         return redirect(url_for('login'))
-    blob = bucket.Blob(filename, bucket)
+    blob = bucket.blob(filename)
     blob.delete()
     query = client.query(kind='Image')
     query.add_filter('id', '=', filename)
