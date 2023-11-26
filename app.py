@@ -135,7 +135,7 @@ def index():
 
     # print(images)
 
-    image_urls = [{"id": image['id'], "name": image["filename"], 'size': sizeOfImage(image)}
+    image_urls = [{"id": image['id'], "name": image["filename"], 'size': sizeOfImage(image), 'url': f'/download/{image["id"]}'}
                   for image in images]
 
     return render_template('index.html', images=image_urls)

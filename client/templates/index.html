@@ -47,7 +47,7 @@
             <li class="image-list-item">
               <div
                 style="cursor: pointer"
-                onclick="openModal('{{ url_for('get_image', filename=image.id) }}', '{{ image.name }}')"
+                onclick="openModal('{{ image.url }}', '{{ image.name }}')"
               >
                 <image
                   class="thumbnail"
