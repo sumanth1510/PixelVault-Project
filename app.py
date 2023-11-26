@@ -16,7 +16,7 @@ with open('google-credentials.json', 'w') as outfile:
 
 
 bucket = storage.Client.from_service_account_json(
-    'google-credentials.json')
+    'google-credentials.json').get_bucket(BUCKET_NAME)
 client = datastore.Client.from_service_account_json(
     'google-credentials.json')
 
